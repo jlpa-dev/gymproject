@@ -1,0 +1,2 @@
+# Set functions env variables
+firebase functions:config:set private.key="cert" project.id="idproject" client.email=""

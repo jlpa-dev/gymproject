@@ -1,0 +1,11 @@
+{
+  "private": {
+    "key": "-----BEGIN PRIVATE KEY-----\\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDBR4U80qKj0cPO\\n8WDe4ZnIheThRIi/lPJf6NW/HVfaWv74bd5apnpF0eRt4nKc8QjHrZdWq76/0KGK\\n3/YnMQSJqx2Nn3BtDEZGMTw7FA4LUOpz0RlgQQrfVlPU9LWX22X+7kBlzPlghhwe\\nMxT5EByDpvM6OqCJuPCDeUav+8mUuIBhQiXOOp/HDuSvFah+LtHcIxQ6Y+R77h9l\\nehNPtXirYXHOA+FfGFXVXOMWyD2R3tC2DfQnD13bD4cUKVzxQwhLU9WCj7+0M9zM\\nh52j0BslcMy6kk8u8YOme5/QG+MbqMb67PEl+MYogZFxaVTwcU6CUIlZwfpA+PS/\\nHhDdvZAXAgMBAAECggEAAg9bla7fCeTx89IxyJ5Z77+xlU8QMA6L2MbYBF3xMkQX\\nBJnTLV8p3XWjvCIWO6L8B3jLrKJO+adlGWBStM86b6cxvPEulxLy6suaizym+6rk\\nnNBlN1fqIEBAy3vCNbiiaSmr6QnavJMhWJcNyavIygRtAjlevakJczVHMhf6aYnb\\nH/4Om15tNmS7D5k3ZbGjQcc2si7imO23UMeIjddnypxP44F/WPrrK3Sn5MWmcS2E\\n40z8t/hoe7ZdNCtew2j6yWsJUEYB7nhIb7EezqQe+6gTuJk2cccN4scDOmxbnsMc\\nO4RCvG8Ye6euLjqioXvvXEQBLwcLbZ0nFOQInVuOEQKBgQDtacCh0hFTF300Ktw+\\nH0XKyUke8N95gU8oN0xh1o9XAsjgw1454MC6t26NesgINP2kwd33eQmEd9fa2+7G\\nHPvP+cFYPARJt1IlGwS1pSeAvJqRxVxnFwxuMd9Bw9ZgH4YHUrSUxyy288AFfh1t\\nG+Z4zNXBmYenOMH0p4qgWk4X8QKBgQDQaTzCrwA4xwvAJ8PFS6f98STqsk5wi3Tp\\ncDQrA4R02R6FvzCcgbn0xasjDxDOQZbucqz00Ms56oME5njrNGUzaIsTD3O/HN8v\\nuzPtB6oGDwW8omfrB2chnJizSFiNwK2na+734MhswT+uzRCVgd9etMvLllz5jE7v\\nN5o3vu3whwKBgB8u5L5ceSoQy8EuX/9I3EHmblRCDxhGg78khEPVir5C/1+GSboQ\\na0AbF8o9dkidrTMWw7DdlQJxO0jj2ljrNaf7hgmw2F9WVNPK2LODHc0q+KJs6dYg\\nkOFoa4qXznCRs2kC0/U2tAjTu0T9a6AJKhxzyx/Cqq6sJc2cs/ib4+YBAoGAd/Rq\\nhX+meAeQ6tu4YaGnIpGedvuEDGEoPIhZbnyKy5qAZ+jgeORt/MWdOAOe36h+z+Xv\\nSMW4gzBIkxR4eqBgs1Mz4ReevlxG1blBLOehY/VXjvhHKc7L/FuexGoalhRVnyyP\\nkdquYXJlTh43smXbBC65sgdsojGw6R0uxXE+kJcCgYB6wq8wz66JtMNcAP4OGGUX\\n5H4yBZ/qPC4LD3eXV5yskLXKGGherBKOk2dnW/HI+1RCGdKlo6CYPk/wtUW0eKiS\\n3RXYvuo69Z/EpnWEsFpAbW6hI0nNKZij45UJXcqIfbqSbe0cBci2UqRBBO+qB0x0\\nJ4g3HI1lHMnnsYrMMZ0MHA==\\n-----END PRIVATE KEY-----\\n"
+  },
+  "client": {
+    "email": "firebase-adminsdk-34y38@gymapp-40596.iam.gserviceaccount.com"
+  },
+  "project": {
+    "id": "gymapp-40596"
+  }
+}
