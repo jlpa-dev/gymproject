@@ -5,7 +5,6 @@
         :label="label"
         filled
         :multiple="multiple"
-        @input="handleInput"
         append
     ></q-file>
     <q-list>
@@ -22,7 +21,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import FilePreview from './FilePreview'
 
 export default defineComponent({
@@ -30,7 +29,7 @@ export default defineComponent({
   components: {
     FilePreview
   },
-  emits: ['removeItem', 'input'],
+  emits: ['update:modelValue'],
   props: {
     label: {
       type: String,
@@ -42,14 +41,14 @@ export default defineComponent({
       default: false
     },
     modelValue: {
-      type: String,
-      default: '',
+      type: Array,
+      default: () => [],
       required: true
     }
   },
   setup (props, { emit }) {
     const oFiles = ref([]),
-      multipleFilesInput = ref('')
+      multipleFilesInput = ref([])
 
     const removeItem = ({ index, id }) => {
       multipleFilesInput.value.removeAtIndex(index)
@@ -65,14 +64,13 @@ export default defineComponent({
       }
     )
 
-    const handleInput = () => {
-      console.log(files)
-      emit('update:modelValue', files)
-    }
+    watch(() => oFiles.value, () => {
+      emit('update:modelValue', files.value)
+    })
+
     return {
       oFiles,
       removeItem,
-      handleInput,
       multipleFilesInput,
       files
     }

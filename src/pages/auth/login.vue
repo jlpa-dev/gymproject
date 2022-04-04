@@ -10,12 +10,9 @@
             <q-separator/>
 
             <q-card-section>
-                <div>
-                    <!--ul v-for="message in form.errors">
-                    <li v-text="message['email']"></li>
-                    </ul-->
+                <!-- <div>
                     Oh! hay problemas con los datos
-                </div>
+                </div> -->
 
                 <q-input
                 orientation="vertical"

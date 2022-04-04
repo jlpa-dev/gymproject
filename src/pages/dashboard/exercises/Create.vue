@@ -71,11 +71,10 @@
         <q-card-section class="row">
           <q-card class="col-sm-12 col-md-6 q-pa-sm">
             <FileUploadPreview
-              :files="vform.portada"
               label="Portada del Ejercicio"
               class="col-md-6"
               spinner-color="white"
-              v-model="vform.portada"
+              v-model="portada"
             />
           </q-card>
         </q-card-section>
@@ -100,15 +99,17 @@
 </template>
 
 <script>
-import { defineComponent, reactive } from 'vue'
-import { apiAdmin } from 'src/boot/axios'
-// import { useRouter } from 'vue-router'
+import { defineComponent, reactive, ref } from 'vue'
+import { db, storage, firebase } from 'src/boot/firebase'
+import { upload } from 'src/helper/firebaseUpload'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import toFormData from 'src/helper/toFormData'
 import FileUploadPreview from 'src/components/FileUploadPreview/FileUploadPreview'
 import { useQuasar } from 'quasar'
 
 import { EXERCISE_TYPES } from 'src/helper/options'
+import { getMetadata } from 'src/helper/imageMeta'
+
 export default defineComponent({
   name: 'ExercisesCreate',
   components: {
@@ -116,45 +117,60 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
-    // const router = useRouter()
+    const router = useRouter()
     const $q = useQuasar()
     const vform = reactive({
       nombre: '',
       descripcion: '',
       sugerencias: '',
-      portada: '',
       peso_sugerido: '',
       series_sugeridas: ''
     })
 
-    const save = async () => {
-      try {
-        await apiAdmin({
-          method: 'POST',
-          url: '/exercises',
-          data: toFormData(vform)
-        })
-        // Redirect back
-        // router.go(-1)
-        $q.notify({
-          color: 'positive',
-          textColor: 'white',
-          icon: 'check',
-          message: 'Equipo creado satisfactoriamente',
-          position: 'top-right',
-          avatar: '',
-          timeout: 1500
-        })
-      } catch (error) {
+    const portada = ref([])
 
+    const save = async () => {
+      const ref = await db.collection('exercises')
+      const id = await db.collection('exercises').doc().id
+
+      if (portada.value.length > 0) {
+        const meta = await getMetadata(portada.value[0])
+        const uploadTask = storage.ref(`exercises/${id}/portada.jpg`).put(portada.value[0], meta)
+
+        const downloadURL = await upload(uploadTask)
+
+        ref.add({
+          id,
+          ...vform,
+          estado: 1,
+          created: firebase.firestore.FieldValue.serverTimestamp(),
+          portada: [{
+            ...meta,
+            mediaLink: downloadURL
+          }]
+        }).then(async response => {
+          console.log(response)
+        }).catch(error => console.log(error))
       }
+
+      $q.notify({
+        color: 'positive',
+        textColor: 'white',
+        icon: 'check',
+        message: 'Ejercicio creado satisfactoriamente',
+        position: 'top-right',
+        avatar: '',
+        timeout: 1500
+      })
+      router.go(-1)
     }
 
     return {
       vform,
       save,
       store,
-      EXERCISE_TYPES
+      EXERCISE_TYPES,
+      portada
     }
   }
 

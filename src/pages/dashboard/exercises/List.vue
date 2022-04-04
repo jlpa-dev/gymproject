@@ -110,8 +110,8 @@
 
 <script>
 import { defineComponent, onMounted, ref } from 'vue'
+import { db } from 'src/boot/firebase'
 import { useRouter } from 'vue-router'
-import { apiAdmin } from 'src/boot/axios'
 import { useQuasar } from 'quasar'
 
 export default defineComponent({
@@ -172,20 +172,20 @@ export default defineComponent({
           timeout: 1000
         })
 
-        apiAdmin
-          .delete('/exercises/' + id)
-          .then(({ data }) => {
-            dtb.value.requestServerInteraction()
-            $q.notify({
-              color: 'positive',
-              textColor: 'white',
-              icon: 'check',
-              message: 'Equipo eliminado satisfactoriamente',
-              position: 'top-right',
-              avatar: '',
-              timeout: 3000
-            })
-          })
+        // apiAdmin
+        //   .delete('/exercises/' + id)
+        //   .then(({ data }) => {
+        //     dtb.value.requestServerInteraction()
+        //     $q.notify({
+        //       color: 'positive',
+        //       textColor: 'white',
+        //       icon: 'check',
+        //       message: 'Equipo eliminado satisfactoriamente',
+        //       position: 'top-right',
+        //       avatar: '',
+        //       timeout: 3000
+        //     })
+        //   })
       }).onCancel(() => {
         $q.notify({
           message: 'Acción Cancelada',
@@ -194,21 +194,25 @@ export default defineComponent({
       })
     }
 
-    const tableData = (props) => {
-      console.log(props)
-      const { page, rowsPerPage, filter } = props.pagination
-      apiAdmin
-        .get(`/exercises?page=${page}&per_page=${rowsPerPage}&filter=${filter}`)
-        .then(({ data }) => {
-          // updating pagination to reflect in the UI
-          tablePagination.value = props.pagination
+    const tableData = async (props) => {
+    //   const { page, rowsPerPage, filter } = props.pagination
+      const { rowsPerPage } = props.pagination
 
-          // then we update the rows with the fetched ones
-          rows.value = data.data
+      const { numberOf } = await db.collection('exercises').doc('meta').get()
+        .then((docRef) => { return docRef.data() })
 
-        // finally we tell QTable to exit the "loading" state
-        // this.$store.dispatch( 'is_loading' , false )
-        })
+      props.pagination.rowsNumber = numberOf
+
+      const data = await db.collection('exercises')
+        .orderBy('created', 'desc')
+        .where('estado', '==', 1)
+        // .startAt(page==1?0:page*per_page)
+        .limit(parseInt(rowsPerPage))
+        .get()
+
+      data.forEach((row) => rows.value.push(row.data()))
+
+      tablePagination.value = props.pagination
     }
 
     onMounted(() => {

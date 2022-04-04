@@ -1,112 +1,100 @@
-import axios from 'axios'
-import { Cookies } from 'quasar'
-import * as types from '../mutations'
+import { firebaseAuth } from 'src/boot/firebase'
 
-// state
-export const state = {
-  user: null,
-  token: Cookies.get('token'),
-  permissions: Cookies.get('permissions'),
-  roles: Cookies.get('roles')
+const state = {
+  loggedIn: false,
+  reqStatus: {},
+  user: null
 }
-
-// mutations
-export const mutations = {
-  [types.SAVE_TOKEN] (state, { token, remember, permissions, roles }) {
-    state.token = token
-    Cookies.set('token', token, { expires: remember ? 365 : null, path: '/' })
-    state.permissions = permissions
-    Cookies.set('permissions', permissions, { expires: remember ? 365 : null, path: '/' })
-    state.roles = roles
-    Cookies.set('roles', roles, { expires: remember ? 365 : null, path: '/' })
+const mutations = {
+  setLoggedIn (state, value) {
+    state.loggedIn = value
   },
-
-  [types.FETCH_USER_SUCCESS] (state, { user }) {
-    state.user = user
+  setReqStatus (state, value) {
+    state.reqCode = value
   },
-
-  [types.FETCH_USER_FAILURE] (state) {
-    state.token = null
-    Cookies.remove('token')
-    Cookies.remove('permissions')
-    Cookies.remove('roles')
-  },
-
-  [types.LOGOUT] (state) {
-    Cookies.remove('token')
-    Cookies.remove('permissions')
-    Cookies.remove('roles')
-    state.user = null
-    state.token = null
-    state.permissions = null
-    state.roles = null
-  },
-
-  [types.UPDATE_USER] (state, { user }) {
-    state.user = user
+  setUser (state, value) {
+    state.user = value
   }
 }
+const actions = {
+  registerUser ({ commit }, payload) {
+    firebaseAuth.createUserWithEmailAndPassword(
+      payload.email, payload.password, payload.name
+    )
+      .then(response => {
+        const { user } = response
+        response.user.sendEmailVerification()
 
-// actions
-export const actions = {
-  saveToken ({ commit, dispatch }, payload) {
-    commit(types.SAVE_TOKEN, payload)
-  },
-
-  async fetchUser ({ commit }) {
-    try {
-      const { data } = await axios.get('/api/user')
-      commit(types.FETCH_USER_SUCCESS, { user: data })
-    } catch (e) {
-      commit(types.FETCH_USER_FAILURE)
-    }
-  },
-
-  updateUser ({ commit }, payload) {
-    commit(types.UPDATE_USER, payload)
-  },
-
-  async logout ({ commit }) {
-    try {
-      await axios.post('/api/logout')
-    } catch (e) { }
-
-    commit(types.LOGOUT)
-  }
-}
-
-// getters
-export const getters = {
-  authUser: state => state.user,
-  authToken: state => state.token,
-  authCheck: state => state.user !== null,
-  authPermissions: state => state.permissions,
-  authRoles: state => state.roles,
-  authState: state => state,
-  hasApiPermission (value) {
-    return function (value) {
-      /* state.permissions.forEach(element => {
-        if ( element === value ) {
-          return true
-        }
-      }); */
-      return state.permissions[value] || false
-    }
-    /* return value => state.permissions.filter(permission =>{
-      return false
-    }); */
-  },
-  hasApiRole (value) {
-    return function (value) {
-      state.roles.forEach(element => {
-        if (element === value) {
-          return true
-        }
+        user
+          .updateProfile({
+            displayName: user.name
+          })
+          .then(() => {})
       })
-      return false
+      .catch(e => {
+        commit('setReqStatus', {
+          code: e.code,
+          success: false
+        })
+      })
+  },
+  recoverPassword ({ commit }, payload) {
+    firebaseAuth.sendPasswordResetEmail(payload.email)
+      .then((response) => {
+        console.log(response.code)
+      })
+      .catch(e => {
+        commit('setReqStatus', {
+          code: e.code,
+          success: false
+        })
+      })
+  },
+  async loginUser ({ commit }, payload) {
+    await firebaseAuth.signInWithEmailAndPassword(
+      payload.email, payload.password
+    )
+      .then(response => {
+        this.$router.push({ name: 'dashboard' })
+      })
+      .catch(e => {
+        commit('setReqStatus', {
+          code: e.code,
+          success: false
+        })
+      })
+  },
+  logoutUser ({ commit }) {
+    firebaseAuth.signOut()
+    commit('setLoggedIn', false)
+    this.$router.push({ name: 'login' })
+  },
+  fetchUser ({ commit }, user) {
+    commit('setLoggedIn', user !== null)
+    if (user) {
+      commit('setUser', {
+        displayName: user.displayName,
+        email: user.email
+      })
+    } else {
+      commit('setUser', null)
     }
-    /* return value => state.permissions.filter(permission =>{
-      return false
-    }); */
+  },
+  handleAuthStateChange ({ commit, dispatch }) {
+    firebaseAuth.onAuthStateChanged((user) => {
+      if (user && user.emailVerified) {
+        dispatch('fetchUser', user)
+      }
+    })
   }
+}
+const getters = {
+
+}
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions,
+  getters
 }

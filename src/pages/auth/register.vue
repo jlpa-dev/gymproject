@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="login">
+  <form @submit.prevent="register">
     <q-card
       inline
       class="bigger q-ma-sm fixed-center"
@@ -10,12 +10,9 @@
       <q-separator />
 
       <q-card-section>
-        <div>
-          <!--ul v-for="message in form.errors">
-                  <li v-text="message['email']"></li>
-                </ul-->
+        <!-- <div>
           Oh! hay problemas con los datos
-        </div>
+        </div> -->
 
         <q-input
           orientation="vertical"
@@ -26,7 +23,7 @@
         <br>
         <q-input
           orientation="vertical"
-          label="Usuario"
+          label="Email"
           v-model="vform.email"
           type="text"
         />
@@ -50,14 +47,7 @@
       </q-card-actions>
 
       <q-separator />
-      <!-- <q-card-actions>
-        <q-btn
-          round
-          color="primary"
-          :loading="store.getters.getLoadingState"
-          icon="mail"
-        ></q-btn>
-      </q-card-actions> -->
+
     </q-card>
   </form>
 </template>
@@ -80,8 +70,11 @@ export default {
       store,
       vform,
       router,
-      login: async () => {
-        store.dispatch('auth/registerUser', vform)
+      register: async () => {
+        await store.dispatch('auth/registerUser', vform)
+
+        // Redirect dashboard.
+        router.push({ name: 'login' })
       }
     }
   }

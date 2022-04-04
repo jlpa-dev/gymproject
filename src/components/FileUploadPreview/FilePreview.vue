@@ -48,7 +48,6 @@ export default defineComponent({
       fileURL = ref(oFile.value ? URL.createObjectURL(oFile.value) : null)
 
     watch(oFile, () => {
-      console.log(oFile.value)
       fileURL.value = URL.createObjectURL(oFile.value)
     })
 

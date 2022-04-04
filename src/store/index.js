@@ -4,7 +4,7 @@ import { createStore } from 'vuex'
 import tabs from './modules/tabs'
 import loading from './modules/loading'
 import screen from './modules/screen'
-import auth from './modules/auth-firebase'
+import auth from './modules/auth'
 
 /*
  * If not building with SSR mode, you can

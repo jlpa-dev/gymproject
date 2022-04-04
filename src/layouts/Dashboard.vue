@@ -111,11 +111,13 @@ export default defineComponent({
       toggleLeftDrawer = () => {
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
+    store.dispatch('auth/handleAuthStateChange')
 
     const logout = () => {
       store.dispatch('auth/logoutUser')
     }
     onMounted(() => {
+
     //   acall.value.start()
     })
     const onResize = (size) => {

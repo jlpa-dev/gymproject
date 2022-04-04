@@ -10,12 +10,9 @@
           <q-separator/>
 
           <q-card-section>
-              <div>
-                <!--ul v-for="message in form.errors">
-                  <li v-text="message['email']"></li>
-                </ul-->
+              <!-- <div>
                 Oh! hay problemas con los datos
-              </div>
+              </div> -->
 
             <q-input
             orientation="vertical"
@@ -51,7 +48,7 @@ export default {
       vform,
       router,
       recover: async () => {
-        store.dispatch('auth/recoverPassword', vform)
+        await store.dispatch('auth/recoverPassword', vform)
         // const { data } = await this.form.post('/api/login')
         // // Save the token.
         // this.store.dispatch('saveToken', {
@@ -64,8 +61,8 @@ export default {
         // // Fetch the user.
         // await this.store.dispatch('fetchUser')
 
-        // // Redirect dashboard.
-        // this.router.push({ name: 'dashboard' })
+        // Redirect dashboard.
+        this.router.push({ name: 'login' })
       }
     }
   }

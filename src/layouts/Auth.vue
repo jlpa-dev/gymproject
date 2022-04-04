@@ -27,7 +27,7 @@ export default {
   name: 'LayoutLogin',
   setup () {
     const store = useStore()
-
+    store.dispatch('auth/handleAuthStateChange')
     return {
       store
     }
